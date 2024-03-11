@@ -1,16 +1,22 @@
-def one_hot_encode_categorical(data):
-    unique_categories = list(set(data))
-    unique_categories.sort()
-    encoded_data = []
-    for category in data:
-        encoded_category = [0] * len(unique_categories)
-        category_index = unique_categories.index(category)
-        encoded_category[category_index] = 1
-        encoded_data.append(encoded_category)
-    return encoded_data
+def onehot_encoding(categories):
+    # Get the unique categories
+    unique_categories = list(set(categories))
+    # Dictionary to store the encoding for each category
+    encoding = {}
+    # Iterate over the unique categories
+    for i, category in enumerate(unique_categories):
+        # Create a binary vector where one element is 1 at the index corresponding to the category position
+        encoding[category] = [0] * i + [1] + [0] * (len(unique_categories) - i - 1)
+    # Return a list of one-hot encoded vectors for each category in the input
+    return [encoding[category] for category in categories]
 
-categorical_data = ['red', 'blue', 'green', 'red', 'yellow', 'blue']
-encoded_data = one_hot_encode_categorical(categorical_data)
-print("One-Hot Encoded Data:")
-for data_point in encoded_data:
-    print(data_point)
+# Example categories
+categories = ['One', 'Two', 'One', 'Three', 'Three', 'One', 'Two']
+
+# Perform one-hot encoding
+encoded_values = onehot_encoding(categories)
+
+# Print the one-hot encoded values
+print("One-hot encoded values are:")
+for category, encoded in zip(categories, encoded_values):
+    print(f"{category}: {encoded}")
