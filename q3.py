@@ -1,16 +1,25 @@
-def label_encode_categorical(data):
-    label_mapping = {}
-    label_counter = 0
+def categorical_to_numerical(categories):
+    # Dictionary to store the encoding of each category
+    encoding_val = {}
+    # Counter to keep track of the numerical encoding
+    count = 0
     
-    for category in data:
-        if category not in label_mapping:
-            label_mapping[category] = label_counter
-            label_counter += 1
+    # Iterate through each category
+    for i in categories:
+        # Check if the category is not already encoded
+        if i not in encoding_val:
+            # Assign a numerical value to the category and increment the counter
+            encoding_val[i] = count
+            count += 1
     
-    return label_mapping
-if __name__=="__main__":
-    categorical_data = ['red', 'blue', 'green', 'red', 'yellow', 'blue']
-    label_mapping = label_encode_categorical(categorical_data)
-    print("Label Mapping:", label_mapping)
-    encoded_data = [label_mapping[category] for category in categorical_data]
-    print("Encoded Data:", encoded_data)
+    # Return a list of numerical values corresponding to the input categories
+    return [encoding_val[i] for i in categories]
+
+# Example categories
+categories = ['One', 'Two', 'One', 'Three', 'Three', 'One', 'Two']
+
+# Convert categorical values to numerical representations
+encoded_values = categorical_to_numerical(categories)
+
+# Print the encoded values
+print("Encoded values:", encoded_values)
