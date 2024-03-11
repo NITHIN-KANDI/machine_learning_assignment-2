@@ -1,25 +1,41 @@
-import numpy as np
 from collections import Counter
+import numpy as np
 
-def euclidean_distance(x1, x2):
-    return np.sqrt(np.sum((x1 - x2)**2))
+def euclidean_distance(point1, point2):
+    """Calculate the Euclidean distance between two points."""
+    return np.sqrt(np.sum((point1 - point2)**2))
 
-def k_nearest_neighbors(X_train, y_train, x_test, k):
+def knn_classifier(training_data, labels, new_point, k):
+    """k-Nearest Neighbors classifier."""
     distances = []
-    for i in range(len(X_train)):
-        dist = euclidean_distance(X_train[i], x_test)
-        distances.append((dist, y_train[i]))
+    for i, point in enumerate(training_data):
+        # Calculate the Euclidean distance between the new point and each point in the training data
+        distance = euclidean_distance(point, new_point)
+        # Store the distance along with the corresponding label
+        distances.append((distance, labels[i]))
     
-    distances = sorted(distances)[:k]
+    # Sort the distances in ascending order
+    distances.sort()
     
-    neighbor_labels = [label for (_, label) in distances]
-    most_common = Counter(neighbor_labels).most_common(1)
+    # Select the k nearest neighbors
+    k_nearest_neighbors = distances[:k]
     
-    return most_common[0][0]
-if __name__=="__main__":
-    X_train = np.array([[1, 2], [2, 3], [3, 4], [5, 6]])
-    y_train = np.array([0, 0, 1, 1])
-    x_test = np.array([4, 5])
-    k = 3
-    predicted_class = k_nearest_neighbors(X_train, y_train, x_test, k)
-    print("Predicted class:", predicted_class)
+    # Count the occurrences of each label among the k nearest neighbors
+    nearest_labels = [label for (_, label) in k_nearest_neighbors]
+    label_counts = Counter(nearest_labels)
+    
+    # Return the label with the highest count
+    return max(label_counts, key=label_counts.get)
+
+# Example usage:
+# Training data and corresponding labels
+training_data = np.array([[1, 2], [2, 3], [3, 4], [4, 5], [5, 6]])
+labels = ['A', 'A', 'B', 'B', 'B']
+# New data point to classify
+new_point = np.array([3.5, 4.5])
+# Number of neighbors to consider
+k = 3
+
+# Classify the new point using k-NN
+predicted_label = knn_classifier(training_data, labels, new_point, k)
+print("Predicted label for the new point:", predicted_label)
